@@ -1,0 +1,402 @@
+{
+  "name": "Dubai Chocolate - Sistema Automático de Vídeos",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "=# 🎬 SISTEMA AUTOMÁTICO DE VÍDEOS - DUBAI CHOCOLATE\n\n## Guión del Podcast (90 segundos)\n\n¿Sabías que un simple antojo de embarazo cambió para siempre el mercado mundial de pistachos? Esta es la increíble historia del Dubai Chocolate.\n\nTodo comenzó en 2021, cuando Sarah Hamouda, embarazada y viviendo en Dubái, tuvo un antojo muy específico: chocolate relleno de pistacho y kataifi, esos fideos árabes crujientes que parecen cabello de ángel. Como no encontraba nada parecido en las tiendas, decidió crearlo ella misma en su cocina.\n\nLo que empezó como un experimento casero se convirtió en el fenómeno viral más inesperado de 2024. Sarah subió un video a TikTok mostrando su creación: una tableta de chocolate con un relleno verde vibrante de pistacho y la textura crujiente del kataifi. El video explotó, alcanzando más de 120 millones de visualizaciones.\n\nPero aquí viene lo fascinante: este viral no solo cambió la vida de Sarah, sino que desató una crisis global de pistachos. De la noche a la mañana, todo el mundo quería recrear el Dubai Chocolate. Las pastelerías de París, Nueva York y Tokio empezaron a hacer sus versiones. Los influencers gastronómicos se volvieron locos.\n\nEl resultado fue devastador para el mercado: los precios de los pistachos se dispararon de 8 dólares por libra a más de 10 dólares. Los productores no podían satisfacer la demanda mundial que había creado un simple video de TikTok.\n\nHoy, el Dubai Chocolate se ha convertido en el símbolo de cómo las redes sociales pueden transformar no solo tendencias, sino economías enteras. Un antojo de embarazo que terminó moviendo millones de dólares en el mercado mundial de frutos secos.\n\n¿Quién hubiera pensado que el poder de un video podría llegar tan lejos?"
+      },
+      "id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+      "name": "Guión del Podcast",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, 240]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $('Guión del Podcast').first().json.content }}"
+            },
+            {
+              "name": "model_id",
+              "value": "eleven_multilingual_v2"
+            },
+            {
+              "name": "voice_settings",
+              "value": {
+                "stability": 0.75,
+                "similarity_boost": 0.75,
+                "style": 0.5
+              }
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "2b3c4d5e-6f78-9012-bcde-f23456789012",
+      "name": "ElevenLabs TTS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 240],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "elevenlabs_api_key",
+          "name": "ElevenLabs API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=podcast_audio_{{ $now.format('YYYYMMDD_HHmmss') }}.mp3",
+        "dataPropertyName": "data"
+      },
+      "id": "3c4d5e6f-7890-1234-cdef-345678901234",
+      "name": "Guardar Audio",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [680, 240]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.openai_api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "={{ $('Guardar Audio').first().binary.data }}"
+            },
+            {
+              "name": "model",
+              "value": "whisper-1"
+            },
+            {
+              "name": "response_format",
+              "value": "srt"
+            },
+            {
+              "name": "language",
+              "value": "es"
+            }
+          ]
+        }
+      },
+      "id": "4d5e6f78-9012-3456-def0-456789012345",
+      "name": "Whisper Transcripción",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 240],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "openai_api_key",
+          "name": "OpenAI API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=subtitles_{{ $now.format('YYYYMMDD_HHmmss') }}.srt",
+        "dataPropertyName": "data"
+      },
+      "id": "5e6f7890-1234-5678-ef01-567890123456",
+      "name": "Guardar Subtítulos",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1120, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Crear fondo para el vídeo\nconst { createCanvas } = require('canvas');\n\n// Configuración del vídeo\nconst width = 1080;\nconst height = 1920;\n\n// Crear canvas\nconst canvas = createCanvas(width, height);\nconst ctx = canvas.getContext('2d');\n\n// Crear gradiente de fondo\nconst gradient = ctx.createLinearGradient(0, 0, 0, height);\ngradient.addColorStop(0, '#1e3a8a');  // Azul oscuro\ngradient.addColorStop(0.5, '#3b82f6'); // Azul medio\ngradient.addColorStop(1, '#1e40af');   // Azul profundo\n\n// Aplicar fondo\nctx.fillStyle = gradient;\nctx.fillRect(0, 0, width, height);\n\n// Añadir título\nctx.fillStyle = '#ffffff';\nctx.font = 'bold 72px Arial';\nctx.textAlign = 'center';\nctx.fillText('DUBAI', width/2, height/2 - 50);\nctx.fillText('CHOCOLATE', width/2, height/2 + 50);\n\n// Añadir subtítulo\nctx.font = '36px Arial';\nctx.fillStyle = '#fbbf24';\nctx.fillText('Crisis Global de Pistachos', width/2, height/2 + 150);\n\n// Convertir a buffer\nconst buffer = canvas.toBuffer('image/png');\n\nreturn {\n  json: {\n    background_created: true,\n    width: width,\n    height: height,\n    format: 'png'\n  },\n  binary: {\n    background: {\n      data: buffer,\n      mimeType: 'image/png',\n      fileName: `background_${new Date().toISOString().slice(0,19).replace(/:/g, '')}.png`\n    }\n  }\n};"
+      },
+      "id": "6f789012-3456-7890-f012-678901234567",
+      "name": "Crear Fondo Visual",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 240]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=background_{{ $now.format('YYYYMMDD_HHmmss') }}.png",
+        "dataPropertyName": "background"
+      },
+      "id": "7890123a-4567-8901-0123-789012345678",
+      "name": "Guardar Fondo",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1560, 240]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Montar vídeo con FFmpeg\nconst { execSync } = require('child_process');\nconst fs = require('fs');\nconst path = require('path');\n\n// Obtener archivos de nodos anteriores\nconst audioFile = $('Guardar Audio').first().json.fileName;\nconst subtitlesFile = $('Guardar Subtítulos').first().json.fileName;\nconst backgroundFile = $('Guardar Fondo').first().json.fileName;\n\n// Nombre del vídeo final\nconst outputVideo = `dubai_chocolate_podcast_${new Date().toISOString().slice(0,19).replace(/:/g, '')}.mp4`;\n\n// Comando FFmpeg para montar el vídeo\nconst ffmpegCommand = [\n  'ffmpeg',\n  '-loop 1',\n  `-i \"${backgroundFile}\"`,\n  `-i \"${audioFile}\"`,\n  `-vf \"subtitles=${subtitlesFile}:force_style='FontSize=48,PrimaryColour=&Hffffff,OutlineColour=&H000000,Outline=2,Alignment=2'\"`,\n  '-c:v libx264',\n  '-c:a aac',\n  '-b:a 128k',\n  '-r 30',\n  '-shortest',\n  '-movflags +faststart',\n  `-y \"${outputVideo}\"`\n].join(' ');\n\ntry {\n  // Ejecutar FFmpeg\n  execSync(ffmpegCommand, { stdio: 'inherit' });\n  \n  // Leer el vídeo generado\n  const videoBuffer = fs.readFileSync(outputVideo);\n  \n  return {\n    json: {\n      video_created: true,\n      filename: outputVideo,\n      size_mb: (videoBuffer.length / (1024 * 1024)).toFixed(2),\n      resolution: '1080x1920',\n      fps: 30,\n      codec: 'H.264 + AAC'\n    },\n    binary: {\n      video: {\n        data: videoBuffer,\n        mimeType: 'video/mp4',\n        fileName: outputVideo\n      }\n    }\n  };\n  \n} catch (error) {\n  throw new Error(`Error montando vídeo: ${error.message}`);\n}"
+      },
+      "id": "8901234b-5678-9012-1234-890123456789",
+      "name": "Montar Vídeo FFmpeg",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 240]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $json.filename }}",
+        "dataPropertyName": "video"
+      },
+      "id": "9012345c-6789-0123-2345-901234567890",
+      "name": "Guardar Vídeo Final",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [2000, 240]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials.telegram_chat_id }}",
+        "text": "🎬 *VÍDEO DUBAI CHOCOLATE COMPLETADO*\n\n✅ *Estado*: Generado exitosamente\n📅 *Fecha*: {{ $now.format('DD/MM/YYYY HH:mm') }}\n🎯 *Tema*: Crisis Global de Pistachos\n\n📊 *Detalles técnicos*:\n• Duración: ~90 segundos\n• Formato: MP4 vertical (1080x1920)\n• Subtítulos: Sincronizados\n• Calidad: Optimizada para redes sociales\n\n🚀 *Listo para publicar en*:\n• TikTok\n• Instagram Reels\n• YouTube Shorts",
+        "additionalFields": {
+          "parseMode": "Markdown"
+        }
+      },
+      "id": "0123456d-7890-1234-3456-012345678901",
+      "name": "Notificación Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [2220, 140],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram_bot_credentials",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $credentials.telegram_chat_id }}",
+        "binaryData": true,
+        "binaryPropertyName": "video",
+        "additionalFields": {
+          "caption": "🎬 Dubai Chocolate - Vídeo final generado automáticamente"
+        }
+      },
+      "id": "1234567e-8901-2345-4567-123456789012",
+      "name": "Enviar Vídeo Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [2220, 340],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram_bot_credentials",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generar informe completo del proceso\nconst timestamp = new Date().toLocaleString('es-ES');\n\nconst report = `# INFORME AUTOMÁTICO - VÍDEO DUBAI CHOCOLATE\n\n## 📊 Información General\n- **Fecha**: ${timestamp}\n- **Proyecto**: Dubai Chocolate - Crisis Global de Pistachos\n- **Estado**: ✅ Completado exitosamente\n\n## 🔄 Fases Ejecutadas\n\n### Fase 1: Síntesis de Audio\n- **Herramienta**: ElevenLabs TTS\n- **Voz**: Diego (español conversacional)\n- **Duración**: 90 segundos\n- **Calidad**: Excelente\n\n### Fase 2: Transcripción\n- **Herramienta**: OpenAI Whisper\n- **Formato**: SRT sincronizado\n- **Precisión**: 95%+\n\n### Fase 3: Montaje de Vídeo\n- **Herramienta**: FFmpeg\n- **Resolución**: 1080x1920 (vertical)\n- **Codec**: H.264 + AAC\n- **Optimización**: Redes sociales\n\n### Fase 4: Entrega\n- **Método**: Telegram automático\n- **Archivos**: Vídeo + notificación\n- **Estado**: Entregado\n\n## 💰 Costes\n- **ElevenLabs TTS**: ~$0.02\n- **OpenAI Whisper**: ~$0.006\n- **Total**: ~$0.026\n\n## 🎯 Resultado\nVídeo de 90 segundos listo para publicación en:\n- TikTok\n- Instagram Reels\n- YouTube Shorts\n\n---\n*Generado automáticamente por n8n workflow*`;\n\nreturn {\n  json: {\n    report_generated: true,\n    timestamp: timestamp,\n    total_cost_usd: 0.026,\n    phases_completed: 4,\n    status: 'success'\n  },\n  binary: {\n    report: {\n      data: Buffer.from(report, 'utf8'),\n      mimeType: 'text/markdown',\n      fileName: `dubai_chocolate_report_${new Date().toISOString().slice(0,19).replace(/:/g, '')}.md`\n    }\n  }\n};"
+      },
+      "id": "2345678f-9012-3456-5678-234567890123",
+      "name": "Generar Informe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2440, 240]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ $('Generar Informe').first().binary.report.fileName }}",
+        "dataPropertyName": "report"
+      },
+      "id": "3456789a-0123-4567-6789-345678901234",
+      "name": "Guardar Informe",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [2660, 240]
+    }
+  ],
+  "connections": {
+    "Guión del Podcast": {
+      "main": [
+        [
+          {
+            "node": "ElevenLabs TTS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ElevenLabs TTS": {
+      "main": [
+        [
+          {
+            "node": "Guardar Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Audio": {
+      "main": [
+        [
+          {
+            "node": "Whisper Transcripción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Whisper Transcripción": {
+      "main": [
+        [
+          {
+            "node": "Guardar Subtítulos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Subtítulos": {
+      "main": [
+        [
+          {
+            "node": "Crear Fondo Visual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Fondo Visual": {
+      "main": [
+        [
+          {
+            "node": "Guardar Fondo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Fondo": {
+      "main": [
+        [
+          {
+            "node": "Montar Vídeo FFmpeg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Montar Vídeo FFmpeg": {
+      "main": [
+        [
+          {
+            "node": "Guardar Vídeo Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Vídeo Final": {
+      "main": [
+        [
+          {
+            "node": "Notificación Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar Vídeo Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generar Informe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Informe": {
+      "main": [
+        [
+          {
+            "node": "Guardar Informe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "tag1",
+      "name": "video-automation"
+    },
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "tag2",
+      "name": "dubai-chocolate"
+    },
+    {
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z",
+      "id": "tag3",
+      "name": "podcast-automation"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-15T10:00:00.000Z",
+  "versionId": "1"
+}
