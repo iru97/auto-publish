@@ -1,0 +1,78 @@
+{
+  "name": "content-generator",
+  "version": "1.0.0",
+  "description": "Advanced podcast script generation with AI-powered content creation, multi-voice support, and comprehensive analysis",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/index.test.js",
+    "start": "node index.js",
+    "validate": "node -e \"const contract = require('./contract'); console.log('Contract validation:', contract.validateInput({}));\""
+  },
+  "keywords": [
+    "content-generation",
+    "podcast",
+    "script-writing",
+    "ai-content",
+    "text-analysis",
+    "nlp",
+    "content-strategy",
+    "viral-content"
+  ],
+  "author": "Auto-Publish System",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^4.20.1",
+    "natural": "^6.12.0",
+    "sentiment": "^5.0.2",
+    "compromise": "^14.10.0",
+    "keyword-extractor": "^0.0.25",
+    "text-readability": "^1.0.1",
+    "text-statistics": "^0.1.1",
+    "franc": "^6.1.0"
+  },
+  "optionalDependencies": {
+    "google-translate": "^3.0.0",
+    "textstat": "^0.7.0",
+    "syllable": "^5.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "auto-publish/modules/content-generator"
+  },
+  "bugs": {
+    "url": "auto-publish/issues"
+  },
+  "homepage": "auto-publish#readme",
+  "moduleInfo": {
+    "type": "content-generator",
+    "version": "1.0.0",
+    "compatibility": {
+      "trend-detector": ">=1.0.0",
+      "topic-researcher": ">=1.0.0"
+    },
+    "performance": {
+      "estimatedDuration": 120,
+      "estimatedCost": 1.25,
+      "reliability": 92,
+      "scalability": "high"
+    },
+    "features": [
+      "AI-powered script generation",
+      "Multi-voice dialogue support",
+      "Platform-specific optimization",
+      "Content quality analysis",
+      "Viral potential prediction",
+      "SEO optimization",
+      "Audience alignment analysis",
+      "Production notes generation",
+      "Content variations",
+      "Performance predictions"
+    ]
+  }
+}
