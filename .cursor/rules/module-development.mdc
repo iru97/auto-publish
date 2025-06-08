@@ -1,0 +1,244 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# DESARROLLO DE MÓDULOS - REGLAS ESTRICTAS
+
+## ESTRUCTURA OBLIGATORIA POR MÓDULO
+
+Cada módulo DEBE tener esta estructura exacta:
+
+```
+modules/[nombre-modulo]/
+├── index.js                 # Implementación principal
+├── contract.ts              # Contrato exportado (OBLIGATORIO)
+├── README.md               # Documentación del módulo
+├── tests/                  # Tests unitarios
+│   └── index.test.js
+└── package.json            # Dependencias específicas (opcional)
+```
+
+## CONTRATO OBLIGATORIO (contract.ts)
+
+Todo módulo DEBE exportar un contrato con esta estructura:
+
+```typescript
+export interface ModuleContract {
+  name: string;                    // Nombre único del módulo
+  version: string;                 // Versionado semántico
+  description: string;             // Descripción clara
+  input: {
+    schema: object;                // Esquema de entrada
+    required: string[];            // Campos obligatorios
+    optional: string[];            // Campos opcionales
+  };
+  output: {
+    schema: object;                // Esquema de salida
+    format: string;                // Formato de salida
+  };
+  dependencies: string[];          // Dependencias externas
+  metadata: {
+    estimatedDuration: number;     // Tiempo estimado (segundos)
+    costEstimate: number;          // Costo estimado (USD)
+    reliability: number;           // Confiabilidad (0-1)
+  };
+}
+```
+
+## IMPLEMENTACIÓN PRINCIPAL (index.js)
+
+### Estructura obligatoria:
+
+```javascript
+// 1. Imports
+const contract = require('./contract');
+
+// 2. Validación de input
+function validateInput(input) {
+  // Validación estricta según contrato
+  // DEBE fallar si input no cumple contrato
+}
+
+// 3. Función principal
+async function execute(input) {
+  // Validar input
+  validateInput(input);
+  
+  try {
+    // Lógica del módulo
+    const result = await processModule(input);
+    
+    // Validar output
+    validateOutput(result);
+    
+    return result;
+  } catch (error) {
+    // Manejo de errores estricto
+    throw new ModuleError(`${contract.name}: ${error.message}`);
+  }
+}
+
+// 4. Validación de output
+function validateOutput(output) {
+  // Validación estricta según contrato
+  // DEBE fallar si output no cumple contrato
+}
+
+// 5. Exports
+module.exports = {
+  contract,
+  execute,
+  validateInput,
+  validateOutput
+};
+```
+
+## REGLAS DE VALIDACIÓN ESTRICTA
+
+### Input Validation:
+- ✅ Verificar todos los campos requeridos
+- ✅ Validar tipos de datos exactos
+- ✅ Rechazar campos no definidos en contrato
+- ❌ NO asumir valores por defecto no documentados
+- ❌ NO procesar input inválido
+
+### Output Validation:
+- ✅ Garantizar estructura exacta según contrato
+- ✅ Validar tipos de datos de salida
+- ✅ Incluir todos los campos obligatorios
+- ❌ NO devolver campos no definidos en contrato
+- ❌ NO devolver datos parciales sin error
+
+## MANEJO DE ERRORES OBLIGATORIO
+
+### Tipos de errores definidos:
+```javascript
+class ModuleError extends Error {
+  constructor(message, code, details) {
+    super(message);
+    this.name = 'ModuleError';
+    this.code = code;
+    this.details = details;
+  }
+}
+
+// Códigos de error estándar:
+// INPUT_INVALID - Input no cumple contrato
+// OUTPUT_INVALID - Output no cumple contrato  
+// PROCESSING_FAILED - Error en lógica interna
+// DEPENDENCY_FAILED - Error en dependencia externa
+```
+
+### Manejo obligatorio:
+- ✅ Capturar TODOS los errores posibles
+- ✅ Proporcionar mensajes claros y específicos
+- ✅ Incluir contexto relevante en detalles
+- ✅ Fallar rápido y explícitamente
+- ❌ NO silenciar errores
+- ❌ NO devolver resultados parciales en error
+
+## DOCUMENTACIÓN OBLIGATORIA (README.md)
+
+### Estructura requerida:
+
+```markdown
+# [Nombre del Módulo]
+
+## Descripción
+[Descripción detallada del propósito]
+
+## Contrato
+- **Input**: [Descripción del input esperado]
+- **Output**: [Descripción del output garantizado]
+- **Dependencias**: [Lista de dependencias externas]
+
+## Uso
+```javascript
+const module = require('./index');
+const result = await module.execute(input);
+```
+
+## Ejemplos
+[Ejemplos de uso con inputs/outputs reales]
+
+## Errores Posibles
+[Lista de errores que puede generar]
+
+## Versionado
+- v1.0.0: Implementación inicial
+```
+
+## TESTING OBLIGATORIO
+
+### Estructura de tests:
+```javascript
+const module = require('../index');
+
+describe('[Nombre del Módulo]', () => {
+  // Test de contrato
+  test('should export valid contract', () => {
+    expect(module.contract).toBeDefined();
+    expect(module.contract.name).toBeDefined();
+    // ... validar estructura completa
+  });
+
+  // Test de input válido
+  test('should process valid input', async () => {
+    const validInput = { /* input válido */ };
+    const result = await module.execute(validInput);
+    expect(result).toBeDefined();
+  });
+
+  // Test de input inválido
+  test('should reject invalid input', async () => {
+    const invalidInput = { /* input inválido */ };
+    await expect(module.execute(invalidInput))
+      .rejects.toThrow('INPUT_INVALID');
+  });
+
+  // Test de output válido
+  test('should return valid output', async () => {
+    const input = { /* input válido */ };
+    const result = await module.execute(input);
+    // Validar que result cumple contrato
+  });
+});
+```
+
+## REGLAS PARA EL LLM AL DESARROLLAR MÓDULOS
+
+### SIEMPRE:
+1. **Leer** el contrato existente antes de modificar
+2. **Validar** que cambios no rompan compatibilidad
+3. **Actualizar** versión si hay breaking changes
+4. **Mantener** estructura de archivos obligatoria
+5. **Implementar** validación estricta de input/output
+6. **Escribir** tests para todos los casos
+7. **Documentar** cambios en README.md
+
+### NUNCA:
+1. **Cambiar** contrato sin actualizar versión
+2. **Omitir** validación de input/output
+3. **Silenciar** errores o excepciones
+4. **Asumir** valores por defecto no documentados
+5. **Procesar** input que no cumple contrato
+6. **Devolver** output que no cumple contrato
+7. **Crear** dependencias no documentadas
+
+## CHECKLIST ANTES DE COMPLETAR MÓDULO
+
+- [ ] Contrato definido y exportado correctamente
+- [ ] Validación estricta de input implementada
+- [ ] Validación estricta de output implementada
+- [ ] Manejo de errores completo
+- [ ] Tests unitarios escritos y pasando
+- [ ] README.md documentado completamente
+- [ ] Estructura de archivos correcta
+- [ ] Sin dependencias no documentadas
+- [ ] Versionado correcto en contrato
+
+---
+
+**IMPORTANTE**: Estas reglas son OBLIGATORIAS para mantener la integridad del sistema de módulos. NO son sugerencias, son requisitos estrictos.
+

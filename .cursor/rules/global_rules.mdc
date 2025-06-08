@@ -1,0 +1,183 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# PROMPT DETALLADO PARA CLAUDE 4 EN CURSOR AI — PROYECTO COMPLETO DE AUTOMATIZACIÓN DE VÍDEOS ESTILO PODCAST
+
+---
+
+## RESUMEN GENERAL
+
+El objetivo es construir un sistema automatizado que detecte un subnicho a partir de una tendencia o nicho global, genere contenido en formato podcast (audio + vídeo + subtítulos), y lo entregue automáticamente (descarga local o envío por bot). Este sistema debe estar disponible en dos formas: Workflows n8n y scripts ejecutables. Cada paso debe estar documentado, justificado, y diseñado para ser iterativo, escalable y con bajo coste.
+
+---
+
+## FLUJO DETALLADO PASO A PASO
+
+### 1. DETECCIÓN DE TENDENCIA Y ELECCIÓN DE SUBNICHO
+
+**Objetivo:** Detectar una tendencia global actual y extraer un subnicho relevante con potencial de engagement y monetización.
+
+**Acciones:**
+
+* Realiza búsqueda combinada en fuentes como Google Trends, TikTok Trending, Reddit, X/Twitter, YouTube.
+* Extrae múltiples tendencias actuales y evalúa:
+
+  * Volumen de búsqueda.
+  * Tasa de crecimiento.
+  * Nivel de saturación.
+  * Posibles audiencias.
+* Clasifica estas tendencias en subnichos.
+* Elige el subnicho más prometedor con base en métricas combinadas.
+
+**Resultado:** Subnicho documentado, justificado con métricas y gráficos si es posible.
+
+---
+
+### 2. INVESTIGACIÓN TEMÁTICA DENTRO DEL SUBNICHO
+
+**Objetivo:** Identificar los temas más discutidos, relevantes o virales dentro del subnicho seleccionado.
+
+**Acciones:**
+
+* Investiga en foros, vídeos, hashtags y títulos más vistos o comentados.
+* Extrae 5–10 temas clave.
+* Analiza qué tema genera más interacción, polémica o interés genuino.
+* Justifica la elección final con una tabla comparativa si aplica.
+
+**Resultado:** Tema central elegido con breve resumen, y razones claras.
+
+---
+
+### 3. GENERACIÓN DE GUION ESTILO PODCAST
+
+**Objetivo:** Crear un guion estilo conversación o monólogo que pueda ser sintetizado como podcast de alta calidad.
+
+**Acciones:**
+
+* Selecciona tono del guion (ej: educativo, inspiracional, informal, técnico) aleatoriamente o basado en la plataforma.
+* Estructura el guion en:
+
+  * Introducción con gancho.
+  * Desarrollo narrativo completo.
+  * Cierre con resumen y reflexión.
+* Asegúrate de que el contenido **dure \~1.5 minutos al hablar**.
+* Si es un diálogo, asigna roles (ej: presentador y experto).
+
+**Resultado:** Guion final generado, formato Markdown o texto plano, listo para sintetizar.
+
+---
+
+### 4. SÍNTESIS DE AUDIO CON VOZ IA
+
+**Objetivo:** Convertir el guion en un archivo de audio natural con una o dos voces.
+
+**Acciones:**
+
+* Selecciona TTS más conveniente (PlayHT, ElevenLabs, Azure TTS, etc.).
+* Si es necesario, crea dos voces distintas y mezcla los audios.
+* Exporta a `.mp3` o `.wav`.
+* Guarda el audio generado con nombre único por fecha o ID.
+
+**Resultado:** Archivo de audio generado, con enlace al guion original y voz asignada por línea si es diálogo.
+
+---
+
+### 5. TRANSCRIPCIÓN AUTOMÁTICA PARA SUBTÍTULOS
+
+**Objetivo:** Obtener una transcripción sincronizada del audio generado.
+
+**Acciones:**
+
+* Utiliza Whisper, Deepgram o herramienta similar.
+* Asegura tiempos por línea compatibles con SRT.
+* Exporta en `.srt` o `.vtt`.
+* También guarda una versión `.txt` con texto limpio.
+
+**Resultado:** Subtítulos sincronizados + versión textual del podcast.
+
+---
+
+### 6. MONTAJE DE VÍDEO CON AUDIO Y SUBTÍTULOS
+
+**Objetivo:** Generar un vídeo que combine un fondo visual simple con el audio y subtítulos anteriores.
+
+**Acciones:**
+
+* Usa fondo de color o imagen estática al inicio.
+* Inserta el audio como pista principal.
+* Incrusta subtítulos (hardcoded o como capa).
+* Exporta en `.mp4`, resolución vertical 1080x1920, formato ideal para Reels/TikTok/Shorts.
+* Herramientas recomendadas: FFmpeg, Remotion, moviepy, RunwayML (si justificado).
+
+**Resultado:** Vídeo corto listo para publicar.
+
+---
+
+### 7. ENTREGA Y EXPORTACIÓN
+
+**Objetivo:** Entregar el vídeo al usuario para revisión o publicación.
+
+**Acciones:**
+
+* Guarda vídeo final en carpeta local `/output/{fecha}`.
+* Opción opcional de enviar por:
+
+  * Bot de Telegram (si configurado).
+  * Publicación automática en Drive o redes (etapa posterior).
+
+**Resultado:** Vídeo entregado y disponible en destino final.
+
+---
+
+### 8. INFORME AUTOMÁTICO DE PROCESO
+
+**Objetivo:** Documentar todo lo hecho en un informe técnico por ejecución.
+
+**Acciones:**
+
+* Genera un informe Markdown con:
+
+  * Elección de tendencia.
+  * Tema y justificación.
+  * Guion generado.
+  * Voz asignada.
+  * Audio y duración.
+  * Archivo de subtítulos.
+  * Formato del vídeo.
+  * Costes estimados por herramienta usada.
+* Guarda en `/output/{fecha}/report.md`.
+
+**Resultado:** Informe visual legible, útil para revisión o publicación.
+
+---
+
+### 9. ARQUITECTURA DUAL
+
+**Workflows n8n:**
+
+* Claude debe entregar flujos con nodos preconfigurados: OpenAI, HTTP Request, funciones, audio/video.
+* Exportar como JSON listo para importar.
+
+**Scripts:**
+
+* Scripts standalone (Python o Node.js).
+* Ejecución completa con entrada mínima (prompt inicial o keyword).
+* Variables de entorno para claves API.
+* Modular, con separación por etapas.
+
+---
+
+### 10. CONTROL DE CALIDAD E ITERACIÓN
+
+* Claude debe cuestionar, razonar y validar cada parte del proceso.
+* Si un resultado no cumple con los objetivos: **repite el paso, ajusta, y documenta el cambio**.
+* No avances hasta justificar cada decisión.
+
+---
+
+## INSTRUCCIÓN FINAL
+
+Comienza investigando tendencias y posibles nichos. No generes código aún. Documenta tu razonamiento, presenta opciones y elige la mejor. Solo luego avanza a la siguiente fase.
+

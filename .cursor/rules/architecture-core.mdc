@@ -1,0 +1,115 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ARQUITECTURA CRÍTICA - SISTEMA DE MÓDULOS ESTRICTO
+
+## DECISIONES ARQUITECTÓNICAS INMUTABLES
+
+### 1. SISTEMA ESTRICTO (NO ADAPTATIVO)
+- **Validación estricta**: Falla rápido y claro en incompatibilidades
+- **Sin adaptaciones automáticas**: No generar puentes automáticos
+- **Conexiones explícitas**: Todas las conexiones deben ser definidas manualmente
+- **Fallo controlado**: Mejor fallar con error claro que comportamiento inesperado
+
+### 2. MÓDULOS INDEPENDIENTES
+- **Contexto aislado**: Cada módulo se desarrolla en sesión separada
+- **Contratos inmutables**: Input/Output definidos estrictamente
+- **Desarrollo modular**: Un módulo a la vez para mantener contexto profundo
+- **Exportación de contratos**: Cada módulo DEBE exportar su contrato
+
+### 3. ORQUESTADOR CENTRAL
+- **Registro dinámico**: Lee contratos de módulos automáticamente
+- **Validación continua**: Pre y post validación obligatoria
+- **Sincronización automática**: Mantiene registro actualizado
+- **Detección de cambios**: Monitorea cambios en contratos
+
+## ESTRUCTURA DE PROYECTO OBLIGATORIA
+
+```
+auto-publish/
+├── core/                    # Orquestador principal
+│   ├── workflow-engine.js   # Ejecutor de flujos
+│   ├── contract-registry.js # Registro de contratos
+│   └── strict-validator.js  # Validador estricto
+├── modules/                 # Módulos independientes
+│   ├── trend-detector/      # Módulo 1: Detección
+│   │   ├── index.js        # Implementación
+│   │   └── contract.ts     # Contrato exportado
+│   ├── content-generator/   # Módulo 2: Contenido
+│   └── [otros-módulos]/
+├── workflows/               # Definiciones de flujos
+└── shared/                  # Utilidades compartidas
+    └── types.ts            # Tipos compartidos
+```
+
+## REGLAS DE DESARROLLO CRÍTICAS
+
+### Para el LLM (Claude):
+1. **SIEMPRE** leer este archivo antes de sugerir cambios arquitectónicos
+2. **NUNCA** sugerir adaptaciones automáticas entre módulos
+3. **VALIDAR** compatibilidad antes de cualquier modificación
+4. **MANTENER** este archivo actualizado con decisiones críticas
+5. **FALLAR** explícitamente si hay incompatibilidades
+
+### Para Módulos:
+1. **EXPORTAR** contrato válido obligatoriamente
+2. **VALIDAR** input estrictamente antes de procesar
+3. **GARANTIZAR** output según contrato definido
+4. **DOCUMENTAR** cambios en contrato con versionado
+
+### Para Flujos:
+1. **DEFINIR** conexiones explícitamente
+2. **VALIDAR** compatibilidad antes de ejecutar
+3. **FALLAR** inmediatamente en incompatibilidades
+4. **DOCUMENTAR** dependencias claramente
+
+## ESTADO ACTUAL DEL PROYECTO
+
+### Módulos Definidos:
+- **trend-detector**: Contrato pendiente de implementar
+- **content-generator**: No implementado
+- **audio-synthesizer**: No implementado
+- **video-composer**: No implementado
+- **delivery-system**: No implementado
+
+### Próximos Pasos:
+1. Implementar módulo trend-detector con contrato estricto
+2. Crear sistema de validación de contratos
+3. Desarrollar orquestador central
+4. Implementar resto de módulos uno por uno
+
+## MEMORIA DE DECISIONES
+
+### ¿Por qué sistema estricto?
+- Evita comportamientos inesperados
+- Facilita debugging y mantenimiento
+- Garantiza evolución controlada
+- Previene "magia" oculta en conexiones
+
+### ¿Por qué módulos independientes?
+- Mantiene contexto profundo por módulo
+- Permite especialización del LLM
+- Facilita desarrollo iterativo
+- Reduce complejidad cognitiva
+
+### ¿Por qué contratos inmutables?
+- Garantiza compatibilidad explícita
+- Facilita versionado y migración
+- Previene cambios accidentales
+- Documenta interfaces claramente
+
+## ADVERTENCIAS CRÍTICAS
+
+⚠️ **NO CAMBIAR** estas decisiones sin consenso explícito
+⚠️ **NO IMPLEMENTAR** adaptaciones automáticas
+⚠️ **NO DESARROLLAR** múltiples módulos simultáneamente
+⚠️ **NO AVANZAR** sin validación estricta de contratos
+
+---
+
+**Última actualización**: [Fecha de creación]
+**Versión**: 1.0.0
+**Estado**: Arquitectura base definida, implementación pendiente
+

@@ -1,0 +1,140 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# MEMORIA DEL PROYECTO AUTO-PUBLISH
+
+## CONTEXTO GENERAL
+Sistema automatizado para generar contenido estilo podcast desde detección de tendencias hasta entrega final de video con subtítulos.
+
+## ARQUITECTURA ELEGIDA
+- **Tipo**: Sistema de módulos independientes con contratos estrictos
+- **Validación**: Estricta, falla rápido, sin adaptaciones automáticas
+- **Desarrollo**: Un módulo por sesión para mantener contexto profundo
+- **Orquestación**: Central con registro dinámico de contratos
+
+## DECISIONES CRÍTICAS TOMADAS
+
+### Arquitectónicas:
+- ✅ Sistema estricto vs adaptativo (elegido: estricto)
+- ✅ Módulos independientes vs monolítico (elegido: independientes)
+- ✅ Contratos TypeScript con validación runtime
+- ✅ Rules de Cursor para mantener contexto persistente
+
+### Tecnológicas:
+- ✅ Node.js + JavaScript para módulos
+- ✅ TypeScript para contratos
+- ✅ Jest para testing
+- ✅ ESLint para calidad de código
+
+## ESTADO ACTUAL DEL PROYECTO
+
+### MÓDULOS COMPLETADOS ✅
+
+#### 1. trend-detector (v1.0.0) - COMPLETADO
+**Ubicación**: `modules/trend-detector/`
+**Estado**: ✅ Listo para producción
+**Archivos**:
+- ✅ `contract.ts` - Contrato estricto definido
+- ✅ `index.js` - Implementación completa con validaciones
+- ✅ `README.md` - Documentación completa
+- ✅ `package.json` - Dependencias y scripts
+- ✅ `tests/index.test.js` - Suite de tests completa
+
+**Funcionalidad**:
+- Detecta tendencias de Google Trends, Reddit, Twitter
+- Selecciona subnichos con algoritmo ponderado
+- Validación estricta de input/output
+- Manejo robusto de errores
+- Métricas de rendimiento y costos
+
+**Input**: Opcional (keywords, sources, timeframe, region, filters)
+**Output**: selectedNiche + alternatives + metadata
+**Duración**: ~45 segundos
+**Costo**: ~$0.15 USD
+
+### MÓDULOS PENDIENTES 🔄
+
+#### 2. topic-researcher (Siguiente)
+**Propósito**: Investigación profunda del tema seleccionado
+**Input esperado**: selectedNiche del trend-detector
+**Output esperado**: Investigación detallada + fuentes + datos
+
+#### 3. script-generator
+**Propósito**: Generar guión estilo podcast
+**Input esperado**: Investigación del topic-researcher
+**Output esperado**: Guión estructurado + metadatos
+
+#### 4. audio-synthesizer
+**Propósito**: Convertir guión a audio con TTS
+**Input esperado**: Guión del script-generator
+**Output esperado**: Archivo de audio + transcripción
+
+#### 5. subtitle-generator
+**Propósito**: Generar subtítulos sincronizados
+**Input esperado**: Audio del audio-synthesizer
+**Output esperado**: Archivos SRT/VTT + texto limpio
+
+#### 6. video-composer
+**Propósito**: Combinar audio + subtítulos + fondo visual
+**Input esperado**: Audio + subtítulos
+**Output esperado**: Video final MP4
+
+#### 7. delivery-manager
+**Propósito**: Entregar contenido final
+**Input esperado**: Video del video-composer
+**Output esperado**: Entrega local/remota + reporte
+
+## PRÓXIMOS PASOS INMEDIATOS
+
+1. **Crear módulo topic-researcher**
+   - Definir contrato estricto
+   - Implementar investigación web real
+   - Conectar con output de trend-detector
+
+2. **Crear orquestador central**
+   - Registry de contratos dinámico
+   - Validador de conexiones estricto
+   - Ejecutor de flujos
+
+3. **Testing de integración**
+   - Probar conexión trend-detector → topic-researcher
+   - Validar contratos en runtime
+
+## REGLAS DE DESARROLLO ACTIVAS
+
+### Para Nuevos Módulos:
+1. **SIEMPRE** crear contrato TypeScript primero
+2. **SIEMPRE** implementar validación estricta
+3. **SIEMPRE** incluir tests completos
+4. **SIEMPRE** documentar en README
+5. **SIEMPRE** actualizar esta memoria
+
+### Para Conexiones:
+1. **NUNCA** adaptar automáticamente formatos
+2. **SIEMPRE** validar compatibilidad estricta
+3. **SIEMPRE** fallar rápido en incompatibilidades
+4. **SIEMPRE** documentar dependencias
+
+## MÉTRICAS DEL PROYECTO
+
+### Módulos Completados: 1/7 (14%)
+### Tests Pasando: ✅ trend-detector (100% coverage esperado)
+### Contratos Definidos: 1/7
+### Documentación: ✅ Completa para trend-detector
+
+## LECCIONES APRENDIDAS
+
+1. **Contratos estrictos funcionan**: Evitan errores de integración
+2. **Validación runtime es crítica**: TypeScript solo no es suficiente
+3. **Tests exhaustivos son esenciales**: Detectan problemas temprano
+4. **Documentación viva es clave**: README debe ser la fuente de verdad
+
+## ÚLTIMA ACTUALIZACIÓN
+**Fecha**: 2025-01-06
+**Módulo**: trend-detector completado
+**Siguiente**: Iniciar topic-researcher
+**Responsable**: Claude AI en sesión de desarrollo modular
+
+
