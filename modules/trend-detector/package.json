@@ -1,0 +1,78 @@
+{
+  "name": "@auto-publish/trend-detector",
+  "version": "1.0.0",
+  "description": "Módulo para detectar tendencias globales y seleccionar subnichos con potencial de engagement",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "trends",
+    "niche-detection",
+    "content-automation",
+    "social-media",
+    "market-research"
+  ],
+  "author": "Auto-Publish System",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "openai": "^4.20.0",
+    "dotenv": "^16.3.0",
+    "google-trends-api": "^4.9.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.55.0",
+    "@types/node": "^20.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auto-publish/modules.git",
+    "directory": "modules/trend-detector"
+  },
+  "bugs": {
+    "url": "https://github.com/auto-publish/modules/issues"
+  },
+  "homepage": "https://github.com/auto-publish/modules/tree/main/modules/trend-detector#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "*.js",
+      "!node_modules/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-console": "off"
+    }
+  }
+}
