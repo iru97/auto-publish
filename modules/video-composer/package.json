@@ -1,0 +1,163 @@
+{
+  "name": "video-composer",
+  "version": "1.0.0",
+  "description": "Advanced video composition engine that combines audio with AI-generated visuals, animations, and effects to create professional podcast videos",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node tests/index.test.js",
+    "validate": "node -e \"const { contract } = require('./contract.js'); console.log('Contract valid:', contract.name)\"",
+    "test:basic": "node -e \"const { execute } = require('./index.js'); execute({ audioData: { mainFile: './test.mp3', segments: [], transcript: { fullText: 'Test', segments: [], srtContent: '', vttContent: '' }, metadata: { duration: 60, sampleRate: 44100, channels: 1, format: 'mp3' } }, videoConfig: { format: 'mp4', resolution: { width: 1920, height: 1080, aspectRatio: '16:9' }, frameRate: 30, quality: 'high', codec: 'h264' }, visualStyle: { template: 'podcast', theme: { primaryColor: '#000000', secondaryColor: '#ffffff', accentColor: '#ff0000', backgroundColor: '#f0f0f0', textColor: '#333333' }, typography: { primaryFont: 'Arial', secondaryFont: 'Helvetica', titleSize: 48, subtitleSize: 24, bodySize: 16 }, layout: 'centered' } }).then(r => console.log('Basic test passed')).catch(e => console.error('Test failed:', e.message))\"",
+    "install-optional": "npm install @runwayml/sdk pika-labs-api stable-video-diffusion luma-ai-sdk kling-ai-api opencv4nodejs tensorflow @mediapipe/tasks-vision",
+    "setup": "mkdir -p temp/video output/video temp/assets temp/scenes temp/backgrounds temp/subtitles temp/effects"
+  },
+  "keywords": [
+    "video",
+    "composition",
+    "ai",
+    "ffmpeg",
+    "podcast",
+    "automation",
+    "video-generation",
+    "visual-effects",
+    "subtitles",
+    "audio-visualization",
+    "runway",
+    "pika",
+    "kling",
+    "luma",
+    "stable-video",
+    "canvas",
+    "sharp",
+    "jimp",
+    "remotion"
+  ],
+  "author": "Auto-Publish System",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "canvas": "^2.11.2",
+    "fabric": "^5.3.0",
+    "sharp": "^0.32.6",
+    "jimp": "^0.22.10",
+    "node-ffmpeg": "^0.6.2",
+    "video-lib": "^0.2.0",
+    "remotion": "^4.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.1",
+    "fs-extra": "^11.1.1",
+    "path": "^0.12.7",
+    "crypto": "^1.0.1"
+  },
+  "optionalDependencies": {
+    "@runwayml/sdk": "^0.0.10",
+    "pika-labs-api": "^1.0.0",
+    "stable-video-diffusion": "^1.0.0",
+    "luma-ai-sdk": "^1.0.0",
+    "kling-ai-api": "^1.0.0",
+    "opencv4nodejs": "^6.0.0",
+    "tensorflow": "^4.15.0",
+    "@mediapipe/tasks-vision": "^0.10.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auto-publish/video-composer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/auto-publish/video-composer/issues"
+  },
+  "homepage": "https://github.com/auto-publish/video-composer#readme",
+  "module": {
+    "name": "video-composer",
+    "version": "1.0.0",
+    "type": "video-composition",
+    "category": "video-processing",
+    "features": [
+      "ai-video-generation",
+      "multi-provider-support",
+      "advanced-composition",
+      "subtitle-animation",
+      "audio-visualization",
+      "platform-optimization",
+      "template-system",
+      "visual-effects",
+      "background-generation",
+      "branding-overlay",
+      "quality-analysis",
+      "batch-processing",
+      "error-recovery",
+      "cost-optimization",
+      "performance-monitoring"
+    ],
+    "providers": [
+      "runway",
+      "pika",
+      "kling",
+      "luma",
+      "stable-video",
+      "local"
+    ],
+    "formats": [
+      "mp4",
+      "mov",
+      "webm",
+      "avi"
+    ],
+    "platforms": [
+      "youtube",
+      "tiktok",
+      "instagram",
+      "twitter",
+      "linkedin"
+    ],
+    "performance": {
+      "estimatedDuration": "2-10 minutes per minute of video",
+      "estimatedCost": "$0.10-$5.00 per minute",
+      "reliability": "91%",
+      "maxConcurrency": 3,
+      "memoryUsage": "2-8GB",
+      "diskSpace": "1-5GB"
+    },
+    "requirements": {
+      "ffmpeg": "required",
+      "imagemagick": "optional",
+      "python3": "optional",
+      "nodejs": ">=16.0.0",
+      "memory": "2GB minimum",
+      "disk": "1GB minimum",
+      "gpu": "optional but recommended"
+    }
+  },
+  "config": {
+    "supportedAIProviders": [
+      "runway",
+      "pika",
+      "kling",
+      "luma",
+      "stable-video"
+    ],
+    "defaultProvider": "kling",
+    "defaultFormat": "mp4",
+    "defaultQuality": "high",
+    "defaultResolution": "1920x1080",
+    "defaultFrameRate": 30,
+    "maxRetries": 3,
+    "timeoutMs": 300000,
+    "maxSceneDuration": 60,
+    "maxVideoLength": 600
+  }
+}
